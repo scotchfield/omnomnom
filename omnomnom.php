@@ -15,7 +15,10 @@ class WP_Omnomnom {
 	 */
 	private static $instance = null;
 
-	const STR_FIND = 'om',
+	/**
+	 * Regex to match, and replacement to use. Om-nom-nom.
+	 */
+	const STR_FIND = '/om/',
 	      STR_REPLACE = 'om-nom-nom';
 
 	/**
@@ -33,24 +36,25 @@ class WP_Omnomnom {
 		add_filter( 'gettext', array( $this, 'gettext_nom' ) );
 	}
 
-	// todo: this will break forms! better way, please.. omnomnom..
+	/**
+	 * Replace any instances found in posts.
+	 */
 	public function the_post_nom( $post ) {
 		if ( isset( $post->omnomnom ) ) {
 			return;
 		}
 
-		$nom_obj = explode( self::STR_FIND, $post->post_title );
-		$post->post_title = implode( self::STR_REPLACE, $nom_obj );
-
-		$nom_obj = explode( self::STR_FIND, $post->post_content );
-		$post->post_content = implode( self::STR_REPLACE, $nom_obj );
+		$post->post_title = preg_replace( self::STR_FIND, self::STR_REPLACE, $post->post_title );
+		$post->post_content = preg_replace( self::STR_FIND, self::STR_REPLACE, $post->post_content );
 
 		$post->omnomnom = true;
 	}
 
+	/**
+	 * Replace any instances found in translated text.
+	 */
 	public function gettext_nom( $translated_text ) {
-		$nom_obj = explode( self::STR_FIND, $translated_text );
-		return implode( self::STR_REPLACE, $nom_obj );
+		return preg_replace( self::STR_FIND, self::STR_REPLACE, $translated_text );
 	}
 }
 
