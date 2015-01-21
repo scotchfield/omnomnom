@@ -23,8 +23,8 @@ class WP_Omnomnom {
 	/**
 	 * Default regex to match, and replacement to use. Om-nom-nom.
 	 */
-	const STR_FIND = '/om/',
-		  STR_REPLACE = 'om-nom-nom';
+	const STR_FIND = 'om';
+	const STR_REPLACE = 'om-nom-nom';
 
 	/**
 	 * Instantiate, if necessary, and add hooks.
@@ -125,8 +125,9 @@ class WP_Omnomnom {
 			return;
 		}
 
-		$post->post_title = preg_replace( $this->str_find, $this->str_replace, $post->post_title );
-		$post->post_content = preg_replace( $this->str_find, $this->str_replace, $post->post_content );
+		$regex_find = '/' . $this->str_find . '/';
+		$post->post_title = preg_replace( $regex_find, $this->str_replace, $post->post_title );
+		$post->post_content = preg_replace( $regex_find, $this->str_replace, $post->post_content );
 
 		$post->omnomnom = true;
 	}
@@ -135,7 +136,8 @@ class WP_Omnomnom {
 	 * Replace any instances found in translated text.
 	 */
 	public function gettext_nom( $translated_text ) {
-		return preg_replace( $this->str_find, $this->str_replace, $translated_text );
+		$regex_find = '/' . $this->str_find . '/';
+		return preg_replace( $regex_find, $this->str_replace, $translated_text );
 	}
 }
 
